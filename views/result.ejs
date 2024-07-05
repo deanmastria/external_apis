@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Result</title>
+</head>
+<body>
+    <h1>Team: <%= team.team.name %></h1>
+    <p>Country: <%= team.team.country %></p>
+    <p>Founded: <%= team.team.founded %></p>
+    <p>Venue: <%= team.venue.name %> in <%= team.venue.city %></p>
+    <p>Capacity: <%= team.venue.capacity %></p>
+    <img src="<%= team.team.logo %>" alt="Team Logo" style="width:100px;height:100px;">
+    <a href="/">Search again</a>
+</body>
+</html>
