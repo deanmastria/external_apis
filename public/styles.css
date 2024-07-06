@@ -1,12 +1,12 @@
-/* public/styles.css */
+
 body {
-    background-color: #f0f8ff; /* Soft appealing background */
+    background-color: #f0f8ff; 
 }
 
 .card {
     border-width: 2px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 
-                0 0 7.5px #E6E6FA, /* Reduced neon glow and changed color to lavender */
+                0 0 7.5px #E6E6FA, 
                 0 0 15px #E6E6FA, 
                 0 0 22.5px #E6E6FA, 
                 0 0 30px #E6E6FA, 
@@ -21,7 +21,7 @@ body {
     align-items: center;
     justify-content: flex-start;
     height: 100%;
-    text-align: center; /* Center the text */
+    text-align: center; 
 }
 
 #result .col-md-6 {
