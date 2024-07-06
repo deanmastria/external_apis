@@ -1,57 +1,77 @@
+// app.js
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors'); // Import the cors package
+const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const PORT = 3000;
 
-// CORS configuration options
+
 const corsOptions = {
-    origin: '*', // Allow all origins
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-    optionSuccessStatus: 200, // Some legacy browsers (IE11, various SmartTVs) choke on 204
+    origin: '*',
+    credentials: true,
+    optionSuccessStatus: 200,
 };
 
-// Enable CORS with the specified options
+
 app.use(cors(corsOptions));
 
-// Serve static files from the "public" directory
-app.use(express.static('public'));
 
-// Middleware to parse request bodies
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 app.use(express.urlencoded({ extended: true }));
 
-// Set EJS as the templating engine
-app.set('view engine', 'ejs');
 
-// Home route to render the static HTML file
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
-});
-
-// Route to handle form submission and fetch data from the API
-app.post('/search', async (req, res) => {
-    const query = req.body.query;
-    const apiKey = 'YOUR_RAPIDAPI_KEY';
+app.get('/api/search', async (req, res) => {
+    const query = req.query.team;
+    const apiKey = '56b74a6e54mshc938c03c3a37700p17e7b7jsnc74ba108eefd'; 
     const apiHost = 'api-football-v1.p.rapidapi.com';
-    const apiUrl = `https://${apiHost}/v3/teams?name=${query}`;
+    const searchUrl = `https://${apiHost}/v3/teams?search=${query}`;
+
+    console.log(`Fetching data for team: ${query}`);
 
     try {
-        const response = await axios.get(apiUrl, {
+        const searchResponse = await axios.get(searchUrl, {
             headers: {
-                'X-RapidAPI-Key': apiKey,
-                'X-RapidAPI-Host': apiHost,
+                'x-rapidapi-key': apiKey,
+                'x-rapidapi-host': apiHost,
             },
         });
-        const teamData = response.data.response[0]; // Assuming the first result is the most relevant
-        res.render('result', { team: teamData });
+
+        if (searchResponse.data.response.length === 0) {
+            return res.status(404).json({ message: 'Team not found' });
+        }
+
+        const teamId = searchResponse.data.response[0].team.id;
+        const statisticsUrl = `https://${apiHost}/v3/teams/statistics?league=39&season=2023&team=${teamId}`;
+        const statsResponse = await axios.get(statisticsUrl, {
+            headers: {
+                'x-rapidapi-key': apiKey,
+                'x-rapidapi-host': apiHost,
+            },
+        });
+
+        const teamData = {
+            team: searchResponse.data.response[0].team,
+            venue: searchResponse.data.response[0].venue,
+            statistics: statsResponse.data.response
+        };
+
+        res.json(teamData);
     } catch (error) {
-        console.log(error.response.data); // Log detailed error response
-        res.render('error', { message: `Request failed with status code ${error.response.status}` });
+        if (error.response) {
+            console.error('API response error:', error.response.data);
+            res.status(error.response.status).json({ message: `Request failed with status code ${error.response.status}: ${error.response.data.message}` });
+        } else {
+            console.error('Error:', error.message);
+            res.status(500).json({ message: 'Internal server error' });
+        }
     }
 });
 
-// Listen on the specified port
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
