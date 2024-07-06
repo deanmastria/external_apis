@@ -1,0 +1,38 @@
+/* public/styles.css */
+body {
+    background-color: #f0f8ff; /* Soft appealing background */
+}
+
+.card {
+    border-width: 2px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 
+                0 0 7.5px #E6E6FA, /* Reduced neon glow and changed color to lavender */
+                0 0 15px #E6E6FA, 
+                0 0 22.5px #E6E6FA, 
+                0 0 30px #E6E6FA, 
+                0 0 37.5px #E6E6FA, 
+                0 0 45px #E6E6FA, 
+                0 0 52.5px #E6E6FA;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    text-align: center; /* Center the text */
+}
+
+#result .col-md-6 {
+    display: flex;
+    align-items: stretch;
+}
+
+#result .card {
+    flex-grow: 1;
+}
+
+.title {
+    font-family: 'Cinzel', serif;
+}
