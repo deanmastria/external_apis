@@ -1,9 +1,13 @@
 "use strict";
-// public/main.js
-document.getElementById('searchForm').addEventListener('submit', async function (event) {
+document.getElementById('searchForm')?.addEventListener('submit', async function (event) {
     event.preventDefault();
-    const teamName = document.getElementById('teamName').value;
+    const teamNameInput = document.getElementById('teamName');
     const resultDiv = document.getElementById('result');
+    if (!teamNameInput || !resultDiv) {
+        console.error('Required elements not found');
+        return;
+    }
+    const teamName = teamNameInput.value;
     try {
         const response = await fetch(`/api/search?team=${teamName}`);
         const data = await response.json();
